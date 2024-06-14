@@ -30,9 +30,15 @@ module.exports = {
     const data = response.data.map((cars) => {
       delete cars.id;
       cars.createdAt = cars.updatedAt = new Date();
-      let obj = {...cars, name: cars.make};
-      delete obj.make
-      return obj
+      let obj = {
+        ...cars,
+        name: cars.make,
+        price:
+          Math.floor(Math.random() * (800_000_000 - 75_000_000 + 1)) +
+          75_000_000,
+      };
+      delete obj.make;
+      return obj;
     });
     // console.log(data);
 

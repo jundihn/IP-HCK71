@@ -6,13 +6,13 @@ async function authentication(req, res, next) {
     let access_token = req.headers.authorization;
 
     if (!access_token) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ name: "Unauthorized" });
     }
 
     let [bearer, token] = access_token.split(" ");
 
     if (bearer !== "Bearer") {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ name: "Unauthorized" });
     }
 
     let payload = verifyToken(token);
@@ -20,13 +20,13 @@ async function authentication(req, res, next) {
     let user = await User.findByPk(payload.id);
 
     if (!user) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ name: "Unauthorized" });
     }
     console.log(user);
     req.user = user;
     next();
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 }
 

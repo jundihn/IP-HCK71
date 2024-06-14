@@ -19,7 +19,7 @@ export default function LoginPage() {
         },
       });
 
-      console.log(data);
+      //   console.log(data);
       localStorage.setItem("access_token", data.access_token);
       navigate("/Homepage");
     } catch (error) {
@@ -27,15 +27,30 @@ export default function LoginPage() {
     }
   };
 
-  function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
+  async function handleCredentialResponse(response) {
+    try {
+      let { data } = await axios({
+        method: "POST",
+        url: "/login-google",
+        headers: {
+          google_token: response.credential,
+        },
+      });
+      //   console.log(res);
+      console.log(data);
+      localStorage.setItem("access_token", data.access_token);
+      navigate("/Homepage");
+    } catch (error) {
+      console.log(error);
+    }
+    // console.log("Encoded JWT ID token: " + response.credential);
   }
   useEffect(() => {
+    // console.log(import.meta.env.VITE_CLIENT_ID);
     window.onload = function () {
       google.accounts.id.initialize({
-        client_id:
-          "1030982186230-du4tl9u9imfjb6qj5gcor6hgji1a7usl.apps.googleusercontent.com",
-        //   callback: handleCredentialResponse
+        client_id: import.meta.env.VITE_CLIENT_ID,
+        callback: handleCredentialResponse,
       });
       google.accounts.id.renderButton(
         document.getElementById("buttonDiv"),
